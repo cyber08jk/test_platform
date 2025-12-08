@@ -265,7 +265,7 @@ export default function Finish() {
                   </svg>
                   <div className="flex flex-col items-start">
                     <span className="font-bold text-sm tracking-wide bg-gradient-to-r from-yellow-600 via-amber-600 to-yellow-700 bg-clip-text text-transparent">
-                      Crafted by J-SQUAD
+                      Crafted by J-SQUAD.
                     </span>
                     <span className="text-xs text-gray-600">Excellence in Assessment Technology</span>
                   </div>
