@@ -54,7 +54,7 @@ export default function SectionB() {
   const [isRecording, setIsRecording] = useState(false)
   const [recordingDone, setRecordingDone] = useState(false)
   const [showHints, setShowHints] = useState(true)
-  
+
   const mediaRecorderRef = useRef<MediaRecorder | null>(null)
   const audioChunksRef = useRef<Blob[]>([])
   const timerRef = useRef<NodeJS.Timeout | null>(null)
@@ -66,7 +66,7 @@ export default function SectionB() {
     setTimeLeft(90)
     setRecordingDone(false)
     setShowHints(true)
-    
+
     const answers = JSON.parse(localStorage.getItem('answers') || '{}')
     if (answers.sectionB?.[task.id]) {
       setRecordingDone(true)
@@ -102,7 +102,7 @@ export default function SectionB() {
 
   const startSpeaking = async () => {
     if (isRecording || recordingDone || phase !== 'speak') return
-    
+
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
       const mediaRecorder = new MediaRecorder(stream)
@@ -145,7 +145,7 @@ export default function SectionB() {
         body: formData,
       })
       const data = await response.json()
-      
+
       const answers = JSON.parse(localStorage.getItem('answers') || '{}')
       answers.sectionB = answers.sectionB || {}
       answers.sectionB[task.id] = {
@@ -176,24 +176,35 @@ export default function SectionB() {
   const progress = ((currentTask + 1) / topics.length) * 100
 
   return (
-    <div className="min-h-screen p-4 md:p-8">
-      <div className="max-w-5xl mx-auto">
+    <main className="min-h-screen relative overflow-x-hidden">
+      {/* Background */}
+      <div
+        className="pointer-events-none fixed inset-0 -z-10 bg-cover bg-center hidden md:block"
+        style={{ backgroundImage: "url('/backgroud_image.jpg')" }}
+      />
+      <div
+        className="pointer-events-none fixed inset-0 -z-10 bg-cover bg-center md:hidden"
+        style={{ backgroundImage: "url('/mobile_bg.png')" }}
+      />
+      <div className="pointer-events-none fixed inset-0 -z-10 bg-slate-900/40" />
+
+      <div className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 sm:py-12 relative z-10">
         {/* Header */}
-        <div className="test-card mb-6">
+        <div className="rounded-3xl bg-white/10 backdrop-blur-xl border border-white/20 shadow-xl shadow-slate-200/30 p-6 sm:p-8 mb-6">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">🅱️ Section B</h1>
-              <p className="text-gray-600">Speaking</p>
+              <h1 className="text-3xl font-bold text-white drop-shadow-md">🅱️ Section B</h1>
+              <p className="text-slate-300 drop-shadow-sm">Speaking</p>
             </div>
             <div className="text-right">
-              <div className="text-sm text-gray-600">Task</div>
+              <div className="text-sm text-slate-300 drop-shadow-sm">Task</div>
               <div className="text-2xl font-bold text-green-600">{currentTask + 1} / 4</div>
             </div>
           </div>
 
           {/* Progress Bar */}
           <div className="h-3 bg-gray-200 rounded-full overflow-hidden">
-            <div 
+            <div
               className="h-full bg-gradient-to-r from-green-500 to-emerald-600 rounded-full transition-all duration-300"
               style={{ width: `${progress}%` }}
             />
@@ -204,9 +215,8 @@ export default function SectionB() {
         <div className="test-card mb-6">
           <div className="flex items-center justify-center gap-8">
             <div className={`flex items-center gap-2 ${phase === 'prep' ? 'text-blue-600' : 'text-gray-400'}`}>
-              <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold ${
-                phase === 'prep' ? 'bg-blue-600 text-white' : 'bg-gray-300'
-              }`}>
+              <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold ${phase === 'prep' ? 'bg-blue-600 text-white' : 'bg-gray-300'
+                }`}>
                 1
               </div>
               <span className="font-semibold">Preparation</span>
@@ -215,9 +225,8 @@ export default function SectionB() {
               <div className={`h-full bg-blue-600 rounded transition-all ${phase === 'speak' ? 'w-full' : 'w-0'}`} />
             </div>
             <div className={`flex items-center gap-2 ${phase === 'speak' ? 'text-green-600' : 'text-gray-400'}`}>
-              <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold ${
-                phase === 'speak' ? 'bg-green-600 text-white' : 'bg-gray-300'
-              }`}>
+              <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold ${phase === 'speak' ? 'bg-green-600 text-white' : 'bg-gray-300'
+                }`}>
                 2
               </div>
               <span className="font-semibold">Speaking</span>
@@ -228,44 +237,43 @@ export default function SectionB() {
         {/* Timer */}
         <div className="test-card mb-6">
           <div className="text-center">
-            <div className="text-sm text-gray-600 mb-2">
+            <div className="text-sm text-slate-300 drop-shadow-sm mb-2">
               {phase === 'prep' ? '⏱️ Preparation Time' : '🎤 Speaking Time'}
             </div>
-            <div className={`text-6xl font-bold py-6 px-8 rounded-xl ${
-              phase === 'prep' 
-                ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white' 
-                : 'bg-gradient-to-r from-green-500 to-emerald-600 text-white'
-            }`}>
+            <div className={`text-6xl font-bold py-6 px-8 rounded-xl ${phase === 'prep'
+              ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white'
+              : 'bg-gradient-to-r from-green-500 to-emerald-600 text-white'
+              }`}>
               {formatTime(timeLeft)}
             </div>
-            <div className="text-sm text-gray-600 mt-2">
+            <div className="text-sm text-slate-300 drop-shadow-sm mt-2">
               {phase === 'prep' ? 'Use this time to organize your thoughts' : 'Speak continuously until time runs out'}
             </div>
           </div>
         </div>
 
         {/* Topic */}
-        <div className="test-card mb-6">
+        <div className="rounded-3xl bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl p-6 sm:p-10 mb-6">
           <div className="mb-4">
-            <span className="inline-block px-4 py-2 bg-green-100 text-green-800 rounded-full font-semibold text-sm mb-4">
+            <span className="inline-block px-4 py-2 bg-emerald-100 text-emerald-800 rounded-full font-black tracking-widest uppercase text-xs mb-4 shadow-sm border border-emerald-500/40">
               Topic {currentTask + 1}
             </span>
           </div>
-          <h2 className="text-3xl font-bold text-gray-900 mb-6 p-6 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border-2 border-green-300">
+          <h2 className="text-3xl font-bold text-white drop-shadow-md mb-6 p-6 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border-2 border-green-300">
             {task.topic}
           </h2>
-          
+
           {/* Hints Toggle */}
           <button
             onClick={() => setShowHints(!showHints)}
-            className="w-full mb-4 p-4 bg-blue-50 hover:bg-blue-100 rounded-lg border-2 border-blue-200 text-left transition-colors"
+            className="w-full mb-4 p-4 bg-blue-50 hover:bg-blue-500/20 backdrop-blur rounded-lg border-2 border-blue-400/30 text-left transition-colors"
           >
             <div className="flex items-center justify-between">
               <span className="font-semibold text-blue-900">💡 Hint Questions (Optional)</span>
-              <svg 
+              <svg
                 className={`w-5 h-5 text-blue-600 transition-transform ${showHints ? 'rotate-180' : ''}`}
-                fill="none" 
-                stroke="currentColor" 
+                fill="none"
+                stroke="currentColor"
                 viewBox="0 0 24 24"
               >
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -274,7 +282,7 @@ export default function SectionB() {
           </button>
 
           {showHints && (
-            <div className="p-6 bg-blue-50 rounded-lg border-2 border-blue-200">
+            <div className="p-6 bg-blue-50 rounded-lg border-2 border-blue-400/30">
               <ul className="space-y-3">
                 {task.hints.map((hint, i) => (
                   <li key={i} className="flex items-start gap-3">
@@ -291,11 +299,11 @@ export default function SectionB() {
 
         {/* Recording Controls */}
         {phase === 'prep' && (
-          <div className="test-card mb-6">
-            <div className="text-center p-8 bg-blue-50 rounded-lg border-2 border-blue-200">
-              <div className="text-6xl mb-4">🤔</div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Preparation Phase</h3>
-              <p className="text-gray-600">
+          <div className="rounded-3xl bg-white/10 backdrop-blur-xl border border-white/20 shadow-xl p-8 mb-6">
+            <div className="text-center p-8 bg-gradient-to-br from-indigo-50 to-blue-50 rounded-2xl border-2 border-indigo-100 shadow-inner">
+              <div className="text-6xl mb-6 drop-shadow-sm">🤔</div>
+              <h3 className="text-2xl font-black text-white drop-shadow-md mb-3 tracking-wide">Preparation Phase</h3>
+              <p className="text-slate-300 drop-shadow-sm font-medium">
                 Use this time to organize your thoughts. Speaking will begin automatically when preparation time ends.
               </p>
             </div>
@@ -304,21 +312,20 @@ export default function SectionB() {
 
         {phase === 'speak' && (
           <div className="test-card mb-6">
-            <h3 className="text-lg font-bold mb-4 text-gray-900">🎤 Record Your Response:</h3>
-            
+            <h3 className="text-lg font-bold mb-4 text-white drop-shadow-md">🎤 Record Your Response:</h3>
+
             <div className="flex flex-wrap gap-4">
               <button
                 onClick={startSpeaking}
                 disabled={isRecording || recordingDone}
-                className={`flex-1 min-w-[200px] py-4 px-6 rounded-lg font-semibold text-lg transition-all ${
-                  isRecording || recordingDone
-                    ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
-                    : 'bg-red-600 text-white hover:bg-red-700'
-                }`}
+                className={`flex-1 min-w-[200px] py-4 px-6 rounded-lg font-semibold text-lg transition-all ${isRecording || recordingDone
+                  ? 'bg-gray-300 text-slate-300 drop-shadow-sm cursor-not-allowed'
+                  : 'bg-red-600 text-white hover:bg-red-700'
+                  }`}
               >
                 {isRecording ? '🔴 Recording...' : recordingDone ? '✓ Recorded' : '🎤 Start Speaking'}
               </button>
-              
+
               {isRecording && (
                 <button
                   onClick={stopSpeaking}
@@ -330,9 +337,9 @@ export default function SectionB() {
             </div>
 
             {isRecording && (
-              <div className="mt-4 flex items-center justify-center gap-3 p-6 bg-red-50 rounded-lg border-2 border-red-300">
+              <div className="mt-4 flex items-center justify-center gap-3 p-6 bg-red-500/20 backdrop-blur rounded-lg border-2 border-red-500/40">
                 <div className="w-4 h-4 bg-red-600 rounded-full animate-pulse"></div>
-                <span className="text-red-700 font-semibold text-lg">Recording in progress... Speak continuously</span>
+                <span className="text-red-300 font-semibold text-lg">Recording in progress... Speak continuously</span>
               </div>
             )}
 
@@ -351,16 +358,17 @@ export default function SectionB() {
         )}
 
         {/* Navigation */}
-        <div className="flex justify-end">
+        <div className="flex justify-end bg-white/10 backdrop-blur px-8 py-5 rounded-2xl border border-white/20 shadow-lg">
           <button
             onClick={nextTask}
             disabled={!recordingDone}
-            className="btn-primary text-lg px-8 py-4"
+            className={`text-lg font-black px-10 py-4 rounded-xl transition-all shadow-xl ${!recordingDone ? 'bg-white/10 text-slate-500 shadow-none cursor-not-allowed border border-white/10' : 'bg-emerald-600/80 backdrop-blur border border-emerald-500/30 text-white hover:bg-emerald-700 hover:shadow-emerald-500/40 hover:-translate-y-1'
+              }`}
           >
             {currentTask < topics.length - 1 ? 'Next Task →' : 'Go to Section C →'}
           </button>
         </div>
       </div>
-    </div>
+    </main>
   )
 }

@@ -85,7 +85,7 @@ export default function SectionC() {
     setSelectedAnswer(answer)
     const newAnswers = { ...answers, [question.id]: answer }
     setAnswers(newAnswers)
-    
+
     const allAnswers = JSON.parse(localStorage.getItem('answers') || '{}')
     allAnswers.sectionC = newAnswers
     localStorage.setItem('answers', JSON.stringify(allAnswers))
@@ -109,17 +109,28 @@ export default function SectionC() {
   const answeredCount = Object.keys(answers).length
 
   return (
-    <div className="min-h-screen p-4 md:p-8">
-      <div className="max-w-5xl mx-auto">
+    <main className="min-h-screen relative overflow-x-hidden">
+      {/* Background */}
+      <div
+        className="pointer-events-none fixed inset-0 -z-10 bg-cover bg-center hidden md:block"
+        style={{ backgroundImage: "url('/backgroud_image.jpg')" }}
+      />
+      <div
+        className="pointer-events-none fixed inset-0 -z-10 bg-cover bg-center md:hidden"
+        style={{ backgroundImage: "url('/mobile_bg.png')" }}
+      />
+      <div className="pointer-events-none fixed inset-0 -z-10 bg-slate-900/40" />
+
+      <div className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 sm:py-12 relative z-10">
         {/* Header */}
-        <div className="test-card mb-6">
+        <div className="rounded-3xl bg-white/10 backdrop-blur-xl border border-white/20 shadow-xl shadow-slate-200/30 p-6 sm:p-8 mb-6">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">🅾️ Section C</h1>
-              <p className="text-gray-600">Grammar</p>
+              <h1 className="text-3xl font-bold text-white drop-shadow-md">🅾️ Section C</h1>
+              <p className="text-slate-300 drop-shadow-sm">Grammar</p>
             </div>
             <div className="text-right">
-              <div className="text-sm text-gray-600">Question</div>
+              <div className="text-sm text-slate-300 drop-shadow-sm">Question</div>
               <div className="text-2xl font-bold text-purple-600">{currentQ + 1} / 34</div>
             </div>
           </div>
@@ -127,46 +138,45 @@ export default function SectionC() {
           {/* Progress Bar */}
           <div className="mb-4">
             <div className="h-3 bg-gray-200 rounded-full overflow-hidden">
-              <div 
+              <div
                 className="h-full bg-gradient-to-r from-purple-500 to-pink-600 rounded-full transition-all duration-300"
                 style={{ width: `${progress}%` }}
               />
             </div>
-            <div className="flex justify-between text-xs text-gray-600 mt-1">
+            <div className="flex justify-between text-xs text-slate-300 drop-shadow-sm mt-1">
               <span>Answered: {answeredCount}/34</span>
               <span>Progress: {Math.round(progress)}%</span>
             </div>
           </div>
 
           {/* Category Badge */}
-          <div className="inline-block px-4 py-2 bg-purple-100 text-purple-800 rounded-full font-semibold">
+          <div className="inline-block px-4 py-2 bg-purple-100 text-purple-800 rounded-full font-black tracking-widest uppercase text-xs shadow-sm border border-purple-200">
             {question.category}
           </div>
         </div>
 
         {/* Question */}
-        <div className="test-card mb-6">
+        <div className="rounded-3xl bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl p-6 sm:p-10 mb-6">
           <div className="mb-6">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 bg-purple-600 text-white rounded-full flex items-center justify-center font-bold">
                 {currentQ + 1}
               </div>
-              <h2 className="text-2xl font-bold text-gray-900">
+              <h2 className="text-2xl font-bold text-white drop-shadow-md">
                 {question.text}
               </h2>
             </div>
           </div>
-          
+
           {/* Options */}
           <div className="space-y-3">
             {question.options.map((option, index) => (
               <label
                 key={index}
-                className={`flex items-center p-5 border-2 rounded-xl cursor-pointer transition-all hover:shadow-md ${
-                  selectedAnswer === option
-                    ? 'border-purple-600 bg-purple-50 shadow-lg'
-                    : 'border-gray-300 hover:border-purple-300 bg-white'
-                }`}
+                className={`flex items-center p-5 border-2 rounded-xl cursor-pointer transition-all hover:shadow-md ${selectedAnswer === option
+                  ? 'border-purple-600 bg-purple-50 shadow-lg'
+                  : 'border-gray-300 hover:border-purple-300 bg-white'
+                  }`}
               >
                 <input
                   type="radio"
@@ -189,62 +199,64 @@ export default function SectionC() {
           </div>
 
           {selectedAnswer && (
-            <div className="mt-4 p-4 bg-green-50 border-l-4 border-green-400 rounded">
-              <p className="text-green-800">✓ Answer saved automatically</p>
+            <div className="mt-6 flex items-center gap-3 p-4 bg-emerald-500/20 backdrop-blur rounded-2xl border-2 border-emerald-500/40 shadow-inner">
+              <span className="text-emerald-300 font-bold text-base tracking-wide">✓ Answer saved automatically</span>
             </div>
           )}
         </div>
 
         {/* Category Progress */}
-        <div className="test-card mb-6">
-          <h3 className="font-bold text-gray-900 mb-3">Question Categories:</h3>
+        <div className="rounded-3xl bg-white/10 backdrop-blur-xl border border-white/20 shadow-xl p-6 sm:p-8 mb-6">
+          <h3 className="font-bold text-white drop-shadow-md mb-3">Question Categories:</h3>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-            <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
-              <div className="text-xs text-gray-600">Verb Forms</div>
+            <div className="p-3 bg-blue-50 rounded-lg border border-blue-400/30">
+              <div className="text-xs text-slate-300 drop-shadow-sm">Verb Forms</div>
               <div className="text-lg font-bold text-blue-600">Q1-8</div>
             </div>
             <div className="p-3 bg-green-50 rounded-lg border border-green-200">
-              <div className="text-xs text-gray-600">Tenses</div>
+              <div className="text-xs text-slate-300 drop-shadow-sm">Tenses</div>
               <div className="text-lg font-bold text-green-600">Q9-16</div>
             </div>
             <div className="p-3 bg-yellow-50 rounded-lg border border-yellow-200">
-              <div className="text-xs text-gray-600">Articles</div>
+              <div className="text-xs text-slate-300 drop-shadow-sm">Articles</div>
               <div className="text-lg font-bold text-yellow-600">Q17-22</div>
             </div>
-            <div className="p-3 bg-red-50 rounded-lg border border-red-200">
-              <div className="text-xs text-gray-600">Voice Change</div>
+            <div className="p-3 bg-red-500/20 backdrop-blur rounded-lg border border-red-500/40">
+              <div className="text-xs text-slate-300 drop-shadow-sm">Voice Change</div>
               <div className="text-lg font-bold text-red-600">Q23-28</div>
             </div>
             <div className="p-3 bg-purple-50 rounded-lg border border-purple-200">
-              <div className="text-xs text-gray-600">Mixed</div>
+              <div className="text-xs text-slate-300 drop-shadow-sm">Mixed</div>
               <div className="text-lg font-bold text-purple-600">Q29-34</div>
             </div>
           </div>
         </div>
 
         {/* Navigation */}
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center bg-white/10 backdrop-blur px-8 py-5 rounded-2xl border border-white/20 shadow-lg">
           <button
             onClick={prevQuestion}
             disabled={currentQ === 0}
-            className={`btn-secondary px-6 py-3 ${currentQ === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
+            className={`font-black px-6 py-3 rounded-xl transition-all shadow-md ${currentQ === 0 ? 'bg-white/10 text-slate-500 shadow-none cursor-not-allowed border border-white/10' : 'bg-slate-100 text-slate-200 hover:bg-slate-200 border border-slate-300'
+              }`}
           >
             ← Previous
           </button>
-          
-          <div className="text-sm text-gray-600">
+
+          <div className="text-sm font-bold text-slate-300 drop-shadow-sm uppercase tracking-widest">
             {answeredCount} of 34 answered
           </div>
-          
+
           <button
             onClick={nextQuestion}
             disabled={!selectedAnswer}
-            className="btn-primary px-8 py-3"
+            className={`font-black text-lg px-10 py-3 rounded-xl transition-all shadow-xl ${!selectedAnswer ? 'bg-white/10 text-slate-500 shadow-none cursor-not-allowed border border-white/10' : 'bg-purple-600 text-white hover:bg-purple-700 hover:shadow-purple-500/40 hover:-translate-y-1'
+              }`}
           >
             {currentQ < grammarQuestions.length - 1 ? 'Next →' : 'Go to Section D →'}
           </button>
         </div>
       </div>
-    </div>
+    </main>
   )
 }

@@ -59,7 +59,7 @@ export default function SectionD() {
   const [answers, setAnswers] = useState<Record<number, string>>({})
   const [selectedAnswer, setSelectedAnswer] = useState('')
   const [isPlaying, setIsPlaying] = useState(false)
-  
+
   const speechSynthRef = useRef<SpeechSynthesisUtterance | null>(null)
 
   const passage = passages[currentPassage]
@@ -70,7 +70,7 @@ export default function SectionD() {
     setAudioPlayed(false)
     setShowQuestions(false)
     setCurrentQuestion(0)
-    
+
     const savedAnswers = JSON.parse(localStorage.getItem('answers') || '{}')
     if (savedAnswers.sectionD) {
       setAnswers(savedAnswers.sectionD)
@@ -96,19 +96,19 @@ export default function SectionD() {
 
   const playPassageAudio = () => {
     if (audioPlayed || isPlaying) return
-    
+
     setIsPlaying(true)
     const utterance = new SpeechSynthesisUtterance(passage.text)
     utterance.rate = 0.95
     utterance.pitch = 1
     utterance.volume = 1
-    
+
     utterance.onend = () => {
       setAudioPlayed(true)
       setShowQuestions(true)
       setIsPlaying(false)
     }
-    
+
     speechSynthRef.current = utterance
     window.speechSynthesis.speak(utterance)
   }
@@ -117,7 +117,7 @@ export default function SectionD() {
     setSelectedAnswer(answer)
     const newAnswers = { ...answers, [question.id]: answer }
     setAnswers(newAnswers)
-    
+
     const allAnswers = JSON.parse(localStorage.getItem('answers') || '{}')
     allAnswers.sectionD = newAnswers
     localStorage.setItem('answers', JSON.stringify(allAnswers))
@@ -144,30 +144,41 @@ export default function SectionD() {
   const progress = (answeredQuestions / totalQuestions) * 100
 
   return (
-    <div className="min-h-screen p-4 md:p-8">
-      <div className="max-w-5xl mx-auto">
+    <main className="min-h-screen relative overflow-x-hidden">
+      {/* Background */}
+      <div
+        className="pointer-events-none fixed inset-0 -z-10 bg-cover bg-center hidden md:block"
+        style={{ backgroundImage: "url('/backgroud_image.jpg')" }}
+      />
+      <div
+        className="pointer-events-none fixed inset-0 -z-10 bg-cover bg-center md:hidden"
+        style={{ backgroundImage: "url('/mobile_bg.png')" }}
+      />
+      <div className="pointer-events-none fixed inset-0 -z-10 bg-slate-900/40" />
+
+      <div className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 sm:py-12 relative z-10">
         {/* Header */}
-        <div className="test-card mb-6">
-          <div className="flex items-center justify-between mb-4">
+        <div className="rounded-3xl bg-white/10 backdrop-blur-xl border border-white/20 shadow-xl shadow-slate-200/30 p-6 sm:p-8 mb-6">
+          <div className="flex items-center justify-between mb-3">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">🅳 Section D</h1>
-              <p className="text-gray-600">Listening Comprehension</p>
+              <h1 className="text-2xl font-bold text-white drop-shadow-md">🅳 Section D</h1>
+              <p className="text-slate-300 drop-shadow-sm text-sm">Listening Comprehension</p>
             </div>
             <div className="text-right">
-              <div className="text-sm text-gray-600">Passage</div>
-              <div className="text-2xl font-bold text-orange-600">{currentPassage + 1} / 4</div>
+              <div className="text-xs text-slate-300 drop-shadow-sm">Passage</div>
+              <div className="text-xl font-bold text-orange-600">{currentPassage + 1} / 4</div>
             </div>
           </div>
 
           {/* Progress Bar */}
-          <div className="mb-4">
-            <div className="h-3 bg-gray-200 rounded-full overflow-hidden">
-              <div 
-                className="h-full bg-gradient-to-r from-orange-500 to-red-600 rounded-full transition-all duration-300"
+          <div className="mb-3">
+            <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+              <div
+                className="h-full bg-orange-600 rounded-full transition-all duration-300"
                 style={{ width: `${progress}%` }}
               />
             </div>
-            <div className="flex justify-between text-xs text-gray-600 mt-1">
+            <div className="flex justify-between text-xs text-slate-300 drop-shadow-sm mt-2">
               <span>Answered: {answeredQuestions}/16</span>
               <span>Progress: {Math.round(progress)}%</span>
             </div>
@@ -177,20 +188,20 @@ export default function SectionD() {
         {!showQuestions ? (
           <>
             {/* Audio Passage */}
-            <div className="test-card mb-6">
-              <div className="mb-6">
-                <span className="inline-block px-4 py-2 bg-orange-100 text-orange-800 rounded-full font-semibold mb-4">
+            <div className="rounded-3xl bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl p-6 sm:p-10 mb-6">
+              <div className="mb-6 border-b pb-4">
+                <span className="inline-block px-4 py-2 bg-orange-100 text-orange-800 rounded-full font-black tracking-widest shadow-sm border border-orange-200 text-xs">
                   Passage {currentPassage + 1}: {passage.title}
                 </span>
               </div>
 
-              <div className="p-8 bg-gradient-to-br from-orange-50 to-red-50 rounded-xl border-2 border-orange-300">
+              <div className="p-8 bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl border-2 border-orange-200 shadow-inner">
                 <div className="text-center mb-6">
-                  <div className="text-6xl mb-4">🎧</div>
-                  <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                  <div className="text-6xl mb-4 drop-shadow-sm">🎧</div>
+                  <h2 className="text-2xl font-black text-white drop-shadow-md mb-2">
                     Listen Carefully
                   </h2>
-                  <p className="text-gray-600">
+                  <p className="text-slate-300 drop-shadow-sm font-medium">
                     The audio will play ONCE. You cannot replay, pause, or rewind.
                   </p>
                 </div>
@@ -198,32 +209,31 @@ export default function SectionD() {
                 <button
                   onClick={playPassageAudio}
                   disabled={audioPlayed || isPlaying}
-                  className={`w-full py-6 px-8 rounded-xl font-bold text-xl transition-all ${
-                    audioPlayed 
-                      ? 'bg-gray-300 text-gray-600 cursor-not-allowed' 
-                      : isPlaying
-                      ? 'bg-yellow-500 text-white animate-pulse'
-                      : 'bg-gradient-to-r from-orange-600 to-red-600 text-white hover:from-orange-700 hover:to-red-700 shadow-lg'
-                  }`}
+                  className={`w-full py-5 px-6 rounded-xl font-black text-xl tracking-wide transition-all shadow-xl hover:-translate-y-1 ${audioPlayed
+                    ? 'bg-slate-200 text-slate-300 drop-shadow-sm shadow-none cursor-not-allowed hover:translate-y-0'
+                    : isPlaying
+                      ? 'bg-orange-500 text-white animate-pulse'
+                      : 'bg-orange-600 text-white hover:bg-orange-700 hover:shadow-orange-500/40'
+                    }`}
                 >
                   {isPlaying ? '🔊 Playing... Listen Carefully' : audioPlayed ? '✓ Audio Played (No Replay)' : '▶️ Play Passage Audio'}
                 </button>
 
                 {isPlaying && (
-                  <div className="mt-6 p-4 bg-yellow-50 border-2 border-yellow-300 rounded-lg">
-                    <div className="flex items-center justify-center gap-3">
-                      <div className="w-3 h-3 bg-yellow-600 rounded-full animate-pulse"></div>
-                      <div className="w-3 h-3 bg-yellow-600 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
-                      <div className="w-3 h-3 bg-yellow-600 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
-                      <span className="ml-3 text-yellow-800 font-semibold">Audio playing... Questions will appear when finished</span>
+                  <div className="mt-4 p-4 bg-yellow-50 border border-yellow-300 rounded-lg">
+                    <div className="flex items-center justify-center gap-2">
+                      <div className="w-2 h-2 bg-yellow-600 rounded-full animate-pulse"></div>
+                      <div className="w-2 h-2 bg-yellow-600 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
+                      <div className="w-2 h-2 bg-yellow-600 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
+                      <span className="ml-2 text-yellow-800 font-semibold text-sm">Audio playing...</span>
                     </div>
                   </div>
                 )}
               </div>
 
-              <div className="mt-6 p-6 bg-red-50 border-l-4 border-red-400 rounded">
-                <h3 className="font-bold text-red-900 mb-2">⚠️ Important:</h3>
-                <ul className="space-y-1 text-sm text-red-800">
+              <div className="mt-8 p-5 bg-red-500/20 backdrop-blur border-l-4 border-red-500 rounded-2xl shadow-inner">
+                <h3 className="font-bold text-red-900 mb-2 tracking-wide">⚠️ Important:</h3>
+                <ul className="space-y-2 text-red-800 text-sm font-medium">
                   <li>• Audio plays ONE time only</li>
                   <li>• No pause, replay, or rewind</li>
                   <li>• Listen for main ideas, details, and speaker's purpose</li>
@@ -235,39 +245,38 @@ export default function SectionD() {
         ) : (
           <>
             {/* Questions */}
-            <div className="test-card mb-6">
-              <div className="mb-6">
+            <div className="rounded-3xl bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl p-6 sm:p-10 mb-6">
+              <div className="mb-6 border-b pb-4">
                 <div className="flex items-center justify-between mb-4">
-                  <span className="inline-block px-4 py-2 bg-orange-100 text-orange-800 rounded-full font-semibold">
+                  <span className="inline-block px-4 py-2 bg-orange-100 text-orange-800 rounded-full font-black tracking-widest uppercase shadow-sm border border-orange-200 text-xs">
                     Passage {currentPassage + 1} - Question {currentQuestion + 1} of 4
                   </span>
-                  <span className="text-sm text-gray-600">
+                  <span className="text-sm font-bold text-slate-300 drop-shadow-sm tracking-widest uppercase">
                     Overall: Q{globalQuestionNumber}/16
                   </span>
                 </div>
               </div>
 
-              <div className="mb-6">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 bg-orange-600 text-white rounded-full flex items-center justify-center font-bold">
+              <div className="mb-5">
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-8 h-8 bg-orange-600 text-white rounded-full flex items-center justify-center font-bold text-sm">
                     {globalQuestionNumber}
                   </div>
-                  <h2 className="text-2xl font-bold text-gray-900">
+                  <h2 className="text-lg font-bold text-white drop-shadow-md">
                     {question.text}
                   </h2>
                 </div>
               </div>
-              
+
               {/* Options */}
-              <div className="space-y-3">
+              <div className="space-y-2">
                 {question.options.map((option, index) => (
                   <label
                     key={index}
-                    className={`flex items-center p-5 border-2 rounded-xl cursor-pointer transition-all hover:shadow-md ${
-                      selectedAnswer === option
-                        ? 'border-orange-600 bg-orange-50 shadow-lg'
-                        : 'border-gray-300 hover:border-orange-300 bg-white'
-                    }`}
+                    className={`flex items-center p-3 border rounded-lg cursor-pointer transition-all ${selectedAnswer === option
+                      ? 'border-orange-600 bg-orange-50 shadow-sm'
+                      : 'border-gray-200 hover:border-orange-300 bg-white'
+                      }`}
                   >
                     <input
                       type="radio"
@@ -275,13 +284,13 @@ export default function SectionD() {
                       value={option}
                       checked={selectedAnswer === option}
                       onChange={(e) => saveAnswer(e.target.value)}
-                      className="w-5 h-5 text-orange-600 focus:ring-orange-500"
+                      className="w-4 h-4 text-orange-600"
                     />
-                    <span className={`ml-4 text-lg ${selectedAnswer === option ? 'font-semibold text-orange-900' : 'text-gray-700'}`}>
+                    <span className={`ml-3 text-sm ${selectedAnswer === option ? 'font-semibold text-orange-900' : 'text-gray-700'}`}>
                       {option}
                     </span>
                     {selectedAnswer === option && (
-                      <svg className="ml-auto w-6 h-6 text-orange-600" fill="currentColor" viewBox="0 0 20 20">
+                      <svg className="ml-auto w-5 h-5 text-orange-600" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                       </svg>
                     )}
@@ -290,62 +299,63 @@ export default function SectionD() {
               </div>
 
               {selectedAnswer && (
-                <div className="mt-4 p-4 bg-green-50 border-l-4 border-green-400 rounded">
-                  <p className="text-green-800">✓ Answer saved automatically</p>
+                <div className="mt-6 flex items-center gap-3 p-4 bg-emerald-500/20 backdrop-blur rounded-2xl border-2 border-emerald-500/40 shadow-inner">
+                  <span className="text-emerald-300 font-bold text-base tracking-wide">✓ Answer saved automatically</span>
                 </div>
               )}
             </div>
 
             {/* Passage Progress */}
-            <div className="test-card mb-6">
-              <h3 className="font-bold text-gray-900 mb-3">Passage Progress:</h3>
+            <div className="rounded-3xl bg-white/10 backdrop-blur-xl border border-white/20 shadow-xl p-6 sm:p-8 mb-6">
+              <h3 className="font-bold text-white drop-shadow-md mb-3 text-base tracking-wide">Passage Progress:</h3>
               <div className="flex gap-2">
                 {passage.questions.map((_, idx) => (
                   <div
                     key={idx}
-                    className={`flex-1 h-2 rounded-full ${
-                      idx < currentQuestion ? 'bg-green-500' :
+                    className={`flex-1 h-2 rounded-full ${idx < currentQuestion ? 'bg-emerald-500/20 backdrop-blur0' :
                       idx === currentQuestion ? 'bg-orange-500' :
-                      'bg-gray-300'
-                    }`}
+                        'bg-slate-200'
+                      }`}
                   />
                 ))}
               </div>
-              <div className="flex justify-between text-xs text-gray-600 mt-2">
+              <div className="flex justify-between text-xs font-bold text-slate-300 drop-shadow-sm uppercase tracking-widest mt-4">
                 <span>Question {currentQuestion + 1} of 4</span>
                 <span>{passage.title}</span>
               </div>
             </div>
 
             {/* Navigation */}
-            <div className="flex justify-between items-center">
+            <div className="flex justify-between items-center bg-white/10 backdrop-blur px-8 py-5 rounded-2xl border border-white/20 shadow-lg">
               <button
                 onClick={prevQuestion}
                 disabled={currentQuestion === 0}
-                className={`btn-secondary px-6 py-3 ${currentQuestion === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
+                className={`font-black px-6 py-3 rounded-xl transition-all shadow-md ${currentQuestion === 0 ? 'bg-white/10 text-slate-500 shadow-none cursor-not-allowed border border-white/10' : 'bg-slate-100 text-slate-200 hover:bg-slate-200 border border-slate-300'
+                  }`}
               >
                 ← Previous
               </button>
-              
-              <div className="text-sm text-gray-600">
+
+              <div className="text-sm font-bold text-slate-300 drop-shadow-sm uppercase tracking-widest">
                 {answeredQuestions} of 16 answered
               </div>
-              
+
               <button
                 onClick={nextQuestion}
                 disabled={!selectedAnswer}
-                className="btn-primary px-8 py-3"
+                className={`font-black text-lg px-10 py-3 rounded-xl transition-all shadow-xl ${!selectedAnswer ? 'bg-white/10 text-slate-500 shadow-none cursor-not-allowed border border-white/10' : 'bg-orange-600 text-white hover:bg-orange-700 hover:shadow-orange-500/40 hover:-translate-y-1'
+                  }`}
               >
-                {currentQuestion < passage.questions.length - 1 
-                  ? 'Next Question →' 
-                  : currentPassage < passages.length - 1 
-                  ? 'Next Passage →' 
-                  : 'Finish Test →'}
+                {currentQuestion < passage.questions.length - 1
+                  ? 'Next Question →'
+                  : currentPassage < passages.length - 1
+                    ? 'Next Passage →'
+                    : 'Finish Test →'}
               </button>
             </div>
           </>
         )}
       </div>
-    </div>
+    </main>
   )
 }

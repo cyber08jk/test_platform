@@ -1,0 +1,41 @@
+<svg width="1920" height="1080" viewBox="0 0 1920 1080" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="base" x1="0" y1="0" x2="1920" y2="1080" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#E6EEFF"/>
+      <stop offset="0.55" stop-color="#EFF7FF"/>
+      <stop offset="1" stop-color="#F8FCFF"/>
+    </linearGradient>
+    <radialGradient id="leftGlow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(280 170) rotate(20) scale(520 390)">
+      <stop stop-color="#2563EB" stop-opacity="0.30"/>
+      <stop offset="1" stop-color="#2563EB" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="rightGlow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1600 200) rotate(-14) scale(430 340)">
+      <stop stop-color="#06B6D4" stop-opacity="0.28"/>
+      <stop offset="1" stop-color="#06B6D4" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="56" height="56" patternUnits="userSpaceOnUse">
+      <path d="M56 0H0V56" stroke="#93C5FD" stroke-opacity="0.35"/>
+    </pattern>
+    <linearGradient id="wave" x1="0" y1="730" x2="1920" y2="980" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#BFDBFE" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#99F6E4" stop-opacity="0.40"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1920" height="1080" fill="url(#base)"/>
+  <rect width="1920" height="1080" fill="url(#grid)"/>
+  <ellipse cx="280" cy="170" rx="520" ry="390" fill="url(#leftGlow)"/>
+  <ellipse cx="1600" cy="200" rx="430" ry="340" fill="url(#rightGlow)"/>
+
+  <path d="M-120 840C100 680 300 690 520 780C760 880 940 920 1210 790C1440 680 1660 700 2040 860V1180H-120V840Z" fill="url(#wave)"/>
+  <path d="M-100 900C170 760 410 760 690 860C950 950 1210 980 1510 860C1730 770 1890 760 2040 820V1180H-100V900Z" fill="#FFFFFF" fill-opacity="0.65"/>
+
+  <g opacity="0.50">
+    <circle cx="360" cy="620" r="4" fill="#2563EB"/>
+    <circle cx="460" cy="560" r="3" fill="#0EA5E9"/>
+    <circle cx="540" cy="640" r="4" fill="#2563EB"/>
+    <circle cx="1500" cy="560" r="4" fill="#0EA5E9"/>
+    <circle cx="1580" cy="640" r="3" fill="#2563EB"/>
+    <circle cx="1660" cy="590" r="4" fill="#0EA5E9"/>
+  </g>
+</svg>

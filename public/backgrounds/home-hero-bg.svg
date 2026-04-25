@@ -1,0 +1,24 @@
+<svg width="1600" height="900" viewBox="0 0 1600 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="wash" x1="0" y1="0" x2="1600" y2="900" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#EAF2FF"/>
+      <stop offset="1" stop-color="#F5FBFF"/>
+    </linearGradient>
+    <radialGradient id="orb1" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(220 160) rotate(25) scale(390 300)">
+      <stop stop-color="#2563EB" stop-opacity="0.20"/>
+      <stop offset="1" stop-color="#2563EB" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="orb2" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1340 180) rotate(10) scale(330 270)">
+      <stop stop-color="#0EA5E9" stop-opacity="0.20"/>
+      <stop offset="1" stop-color="#0EA5E9" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="44" height="44" patternUnits="userSpaceOnUse">
+      <path d="M44 0H0V44" stroke="#BFDBFE" stroke-opacity="0.35"/>
+    </pattern>
+  </defs>
+  <rect width="1600" height="900" fill="url(#wash)"/>
+  <rect width="1600" height="900" fill="url(#grid)"/>
+  <ellipse cx="220" cy="160" rx="390" ry="300" fill="url(#orb1)"/>
+  <ellipse cx="1340" cy="180" rx="330" ry="270" fill="url(#orb2)"/>
+  <path d="M-120 780C80 640 260 700 430 760C600 820 780 880 980 760C1170 645 1340 650 1720 780V980H-120V780Z" fill="#DBEAFE" fill-opacity="0.55"/>
+</svg>

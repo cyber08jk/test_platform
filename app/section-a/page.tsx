@@ -44,7 +44,7 @@ export default function SectionA() {
   const [tabSwitches, setTabSwitches] = useState(0)
   const [warnings, setWarnings] = useState<string[]>([])
   const [isPlaying, setIsPlaying] = useState(false)
-  
+
   const mediaRecorderRef = useRef<MediaRecorder | null>(null)
   const audioChunksRef = useRef<Blob[]>([])
   const timerRef = useRef<NodeJS.Timeout | null>(null)
@@ -57,14 +57,14 @@ export default function SectionA() {
 
   useEffect(() => {
     checkMicrophone()
-    
+
     const handleVisibilityChange = () => {
       if (document.hidden) {
         setTabSwitches(prev => prev + 1)
         setWarnings(prev => [...prev, '⚠️ Tab switch detected! Stay on this page.'])
       }
     }
-    
+
     document.addEventListener('visibilitychange', handleVisibilityChange)
     return () => document.removeEventListener('visibilitychange', handleVisibilityChange)
   }, [])
@@ -74,7 +74,7 @@ export default function SectionA() {
     setAudioPlayed(false)
     setRecordingDone(false)
     setIsPlaying(false)
-    
+
     const answers = JSON.parse(localStorage.getItem('answers') || '{}')
     if (answers.sectionA?.[question.id]) {
       setRecordingDone(true)
@@ -108,18 +108,18 @@ export default function SectionA() {
 
   const playAudioSentence = () => {
     if (audioPlayed || !isListenRepeat) return
-    
+
     setIsPlaying(true)
     const utterance = new SpeechSynthesisUtterance(question.text)
     utterance.rate = 0.9
     utterance.pitch = 1
     utterance.volume = 1
-    
+
     utterance.onend = () => {
       setAudioPlayed(true)
       setIsPlaying(false)
     }
-    
+
     speechSynthRef.current = utterance
     window.speechSynthesis.speak(utterance)
   }
@@ -130,7 +130,7 @@ export default function SectionA() {
       setWarnings(prev => [...prev, '⚠️ Please play the audio first!'])
       return
     }
-    
+
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
       const mediaRecorder = new MediaRecorder(stream)
@@ -173,7 +173,7 @@ export default function SectionA() {
         body: formData,
       })
       const data = await response.json()
-      
+
       const answers = JSON.parse(localStorage.getItem('answers') || '{}')
       answers.sectionA = answers.sectionA || {}
       answers.sectionA[question.id] = {
@@ -208,34 +208,44 @@ export default function SectionA() {
   const progress = ((currentQ + 1) / allQuestions.length) * 100
 
   return (
-    <div className="min-h-screen p-4 md:p-8">
-      <div className="max-w-5xl mx-auto">
+    <main className="min-h-screen relative overflow-x-hidden">
+      {/* Background */}
+      <div
+        className="pointer-events-none fixed inset-0 -z-10 bg-cover bg-center hidden md:block"
+        style={{ backgroundImage: "url('/backgroud_image.jpg')" }}
+      />
+      <div
+        className="pointer-events-none fixed inset-0 -z-10 bg-cover bg-center md:hidden"
+        style={{ backgroundImage: "url('/mobile_bg.png')" }}
+      />
+      <div className="pointer-events-none fixed inset-0 -z-10 bg-slate-900/40" />
+
+      <div className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
         {/* Header */}
-        <div className="test-card mb-6">
+        <div className="rounded-3xl bg-white/10 backdrop-blur-md border border-white/20 shadow-xl shadow-black/10 p-6 sm:p-8 mb-6">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">🅰️ Section A</h1>
-              <p className="text-gray-600">Reading & Listening</p>
+              <h1 className="text-3xl font-extrabold text-white drop-shadow-md">🅰️ Section A</h1>
+              <p className="text-slate-200 drop-shadow-sm">Reading & Listening</p>
             </div>
             <div className="text-right">
-              <div className="text-sm text-gray-600">Question</div>
-              <div className="text-2xl font-bold text-blue-600">{currentQ + 1} / 23</div>
+              <div className="text-sm font-bold text-slate-300 uppercase tracking-widest drop-shadow-sm">Question</div>
+              <div className="text-2xl font-black text-blue-300 drop-shadow-sm">{currentQ + 1} / 23</div>
             </div>
           </div>
 
           {/* Progress Bar */}
           <div className="mb-4">
-            <div className="h-3 bg-gray-200 rounded-full overflow-hidden">
-              <div className="progress-bar" style={{ width: `${progress}%` }} />
+            <div className="h-3 bg-white/10 border border-white/20 rounded-full overflow-hidden backdrop-blur-sm">
+              <div className="h-full bg-gradient-to-r from-blue-400 to-indigo-500" style={{ width: `${progress}%` }} />
             </div>
-            <div className="flex justify-between text-xs text-gray-600 mt-1">
+            <div className="flex justify-between text-xs font-bold text-slate-300 mt-2 drop-shadow-sm uppercase tracking-wider">
               <span>Read Aloud: 1-18</span>
               <span>Listen & Repeat: 19-23</span>
             </div>
           </div>
 
-          {/* Question Type Badge */}
-          <div className="inline-block px-4 py-2 bg-blue-100 text-blue-800 rounded-full font-semibold mb-4">
+          <div className="inline-block px-4 py-2 bg-blue-500/20 text-blue-200 border border-blue-400/30 backdrop-blur-sm rounded-full font-black mb-2 shadow-sm uppercase tracking-widest text-xs">
             {questionType} - Question {currentQ + 1}
           </div>
         </div>
@@ -244,7 +254,7 @@ export default function SectionA() {
         {warnings.length > 0 && (
           <div className="mb-6 space-y-2">
             {warnings.slice(-3).map((w, i) => (
-              <div key={i} className="warning-box">
+              <div key={i} className="p-4 bg-red-500/20 backdrop-blur-md border border-red-500/40 rounded-2xl text-red-200 font-bold shadow-sm animate-in fade-in slide-in-from-top-2">
                 {w}
               </div>
             ))}
@@ -252,77 +262,73 @@ export default function SectionA() {
         )}
 
         {/* Timer */}
-        <div className="test-card mb-6">
-          <div className="text-center">
-            <div className="text-sm text-gray-600 mb-2">Time Remaining</div>
-            <div className="timer-display">
-              {timeLeft}s
-            </div>
+        <div className="rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 shadow-lg p-6 mb-6 text-center">
+          <div className="text-sm font-black tracking-widest uppercase text-slate-300 mb-2 drop-shadow-sm">Time Remaining</div>
+          <div className="text-6xl font-black text-white drop-shadow-md">
+            {timeLeft}s
           </div>
         </div>
 
         {/* Question Content */}
-        <div className="test-card mb-6">
+        <div className="rounded-3xl bg-white/10 backdrop-blur-md border border-white/20 shadow-2xl shadow-black/10 p-6 sm:p-10 mb-6">
           {!isListenRepeat ? (
             <>
-              <h2 className="text-xl font-bold mb-4 text-gray-900">
+              <h2 className="text-xl font-bold mb-6 text-white drop-shadow-md border-b border-white/20 pb-4">
                 📖 Read the following text aloud:
               </h2>
-              <div className="question-text">
+              <div className="text-3xl font-medium leading-relaxed text-white bg-white/5 border border-white/20 rounded-2xl p-8 shadow-inner">
                 {question.text}
               </div>
-              <p className="text-sm text-gray-600 mt-4">
-                💡 Read clearly and naturally. You have {question.timer} seconds.
+              <p className="font-bold text-slate-300 mt-6 flex items-center gap-2 drop-shadow-sm">
+                <span className="text-amber-400 text-xl">💡</span> Read clearly and naturally. You have {question.timer} seconds.
               </p>
             </>
           ) : (
             <>
-              <h2 className="text-xl font-bold mb-4 text-gray-900">
+              <h2 className="text-xl font-bold mb-6 text-white drop-shadow-md border-b border-white/20 pb-4">
                 🎧 Listen and repeat exactly what you hear:
               </h2>
-              <div className="p-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border-2 border-blue-300">
+              <div className="p-8 bg-white/5 rounded-2xl border border-white/20 shadow-inner">
                 <button
                   onClick={playAudioSentence}
                   disabled={audioPlayed || isPlaying}
-                  className={`w-full py-4 px-6 rounded-lg font-semibold text-lg transition-all ${
-                    audioPlayed 
-                      ? 'bg-gray-300 text-gray-600 cursor-not-allowed' 
-                      : isPlaying
-                      ? 'bg-yellow-500 text-white'
-                      : 'bg-green-600 text-white hover:bg-green-700'
-                  }`}
+                  className={`w-full py-5 px-6 rounded-xl font-black text-xl tracking-wide transition-all shadow-xl hover:-translate-y-1 ${audioPlayed
+                    ? 'bg-white/10 text-slate-500 shadow-none cursor-not-allowed hover:translate-y-0 border border-white/10'
+                    : isPlaying
+                      ? 'bg-amber-500/80 backdrop-blur text-white animate-pulse'
+                      : 'bg-blue-600/80 backdrop-blur text-white hover:bg-blue-600 hover:shadow-blue-500/40'
+                    }`}
                 >
                   {isPlaying ? '🔊 Playing... Listen Carefully' : audioPlayed ? '✓ Audio Played (No Replay)' : '▶️ Play Audio Once'}
                 </button>
               </div>
-              <p className="text-sm text-gray-600 mt-4">
-                ⚠️ Audio plays ONCE only. Listen carefully and repeat exactly.
+              <p className="font-bold text-slate-300 mt-6 flex items-center gap-2 drop-shadow-sm">
+                <span className="text-amber-400 text-xl">⚠️</span> Audio plays ONCE only. Listen carefully and repeat exactly.
               </p>
             </>
           )}
         </div>
 
         {/* Recording Controls */}
-        <div className="test-card mb-6">
-          <h3 className="text-lg font-bold mb-4 text-gray-900">🎤 Your Recording:</h3>
-          
+        <div className="rounded-3xl bg-white/10 backdrop-blur-md border border-white/20 shadow-xl shadow-black/10 p-6 sm:p-8 mb-6">
+          <h3 className="text-xl font-bold mb-6 text-white drop-shadow-md">🎤 Your Recording:</h3>
+
           <div className="flex flex-wrap gap-4">
             <button
               onClick={startRecording}
               disabled={isRecording || recordingDone || (isListenRepeat && !audioPlayed)}
-              className={`flex-1 min-w-[200px] py-4 px-6 rounded-lg font-semibold text-lg transition-all ${
-                isRecording || recordingDone || (isListenRepeat && !audioPlayed)
-                  ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
-                  : 'bg-red-600 text-white hover:bg-red-700'
-              }`}
+              className={`flex-1 min-w-[200px] py-4 px-6 rounded-xl font-black text-lg tracking-wide transition-all shadow-xl hover:-translate-y-1 ${isRecording || recordingDone || (isListenRepeat && !audioPlayed)
+                ? 'bg-white/10 text-slate-400 shadow-none cursor-not-allowed hover:translate-y-0 border border-white/10'
+                : 'bg-emerald-600/80 backdrop-blur border border-emerald-500/30 text-white hover:bg-emerald-600 hover:shadow-emerald-500/40'
+                }`}
             >
               {isRecording ? '🔴 Recording...' : recordingDone ? '✓ Recorded' : '🎤 Start Recording'}
             </button>
-            
+
             {isRecording && (
               <button
                 onClick={stopRecording}
-                className="flex-1 min-w-[200px] btn-secondary py-4 text-lg"
+                className="flex-1 min-w-[200px] py-4 px-6 rounded-xl font-black text-lg text-white bg-red-600 hover:bg-red-700 shadow-xl shadow-red-500/40 transition-all hover:-translate-y-1 border border-red-500/30"
               >
                 ⏹️ Stop Recording
               </button>
@@ -330,33 +336,34 @@ export default function SectionA() {
           </div>
 
           {isRecording && (
-            <div className="mt-4 flex items-center justify-center gap-3 p-4 bg-red-50 rounded-lg border-2 border-red-300">
-              <div className="w-4 h-4 bg-red-600 rounded-full animate-pulse"></div>
-              <span className="text-red-700 font-semibold text-lg">Recording in progress...</span>
+            <div className="mt-6 flex items-center justify-center gap-3 p-5 bg-red-500/20 backdrop-blur rounded-2xl border border-red-500/40 shadow-inner">
+              <div className="w-4 h-4 bg-red-500 rounded-full animate-pulse shadow-xl shadow-red-500" />
+              <span className="text-red-200 font-bold text-xl tracking-wide drop-shadow-sm">Recording in progress...</span>
             </div>
           )}
 
           {recordingDone && (
-            <div className="mt-4 success-box">
-              ✓ Recording uploaded successfully! Click Next to continue.
+            <div className="mt-6 flex items-center justify-center gap-3 p-5 bg-emerald-500/20 backdrop-blur rounded-2xl border border-emerald-500/40 shadow-inner">
+              <span className="text-emerald-100 font-bold text-lg drop-shadow-sm">✓ Recording uploaded successfully! Click Next to continue.</span>
             </div>
           )}
         </div>
 
         {/* Navigation */}
-        <div className="flex justify-between items-center">
-          <div className="text-sm text-gray-600">
+        <div className="flex justify-between items-center bg-white/10 backdrop-blur-md px-8 py-5 rounded-3xl border border-white/20 shadow-lg shadow-black/10">
+          <div className="text-sm font-bold text-slate-300 uppercase tracking-widest drop-shadow-sm">
             Tab switches: {tabSwitches}
           </div>
           <button
             onClick={nextQuestion}
             disabled={!recordingDone}
-            className="btn-primary text-lg px-8 py-4"
+            className={`text-lg font-black px-10 py-4 rounded-xl transition-all shadow-xl ${!recordingDone ? 'bg-white/10 text-slate-500 shadow-none cursor-not-allowed border border-white/10' : 'bg-blue-600/90 backdrop-blur border border-blue-500/30 text-white hover:bg-blue-600 hover:shadow-blue-500/40 hover:-translate-y-1'
+              }`}
           >
             {currentQ < allQuestions.length - 1 ? 'Next Question →' : 'Go to Section B →'}
           </button>
         </div>
       </div>
-    </div>
+    </main>
   )
 }
